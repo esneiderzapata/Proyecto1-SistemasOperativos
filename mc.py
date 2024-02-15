@@ -31,6 +31,13 @@ def main():
     parser = argparse.ArgumentParser(description="---")
     parser.add_argument("-f", "--file", required=True, help="Ruta al archivo AIFF a convertir o a la carpeta")
     args = parser.parse_args()
+
+    #Comprobar si file es una carpeta o un archivo .aif
+    if os.path.isdir(args.file):
+        print("es una carpeta")
+        return
+
+    #Si es un archivo .aif cargarlo
     audio_cd = AudioSegment.from_file(args.file, format="aiff")
 
     # Convertir a MP3, AAC y FLAC
