@@ -23,18 +23,32 @@ def guardar_archivo(nombre_archivo, contenido):
         f.write(contenido)
     print(f"Archivo guardado como {nombre_archivo}")
 
-def main():
-    # Cargar el archivo de audio CD-A
-    #audio_cd = AudioSegment.from_file("08 Taken.aif", format="aiff")
+def convertir_carpeta(carpeta, formato):
+    contador = 0
+    for archivo in os.listdir(carpeta):
+        if archivo.endswith(".aif"):
+            if formato == "mp3":
+                mp3_content = convertir_a_mp3(AudioSegment.from_file(os.path.join(carpeta, archivo), format="aiff"))
+                guardar_archivo(f"archivo {contador}.mp3", mp3_content)
+            elif formato == "ogg":
+                ogg_content = convertir_a_ogg(AudioSegment.from_file(os.path.join(carpeta, archivo), format="aiff"))
+                guardar_archivo(f"archivo {contador}.ogg", ogg_content)
+            elif formato == "flac":
+                flac_content = convertir_a_flac(AudioSegment.from_file(os.path.join(carpeta, archivo), format="aiff"))
+                guardar_archivo(f"archivo {contador}.flac", flac_content)
+            contador += 1
 
+def main():
     # Crear y configurar Parser para obtener argumentos
     parser = argparse.ArgumentParser(description="---")
     parser.add_argument("-f", "--file", required=True, help="Ruta al archivo AIFF a convertir o a la carpeta")
+    parser.add_argument("-e", "--encoding", type=str, choices=["mp3", "ogg", "flac"], help="Formato al que se desea convertir (mp3, ogg, flac)", required=False)
     args = parser.parse_args()
 
-    #Comprobar si file es una carpeta o un archivo .aif
+    #Comprobar si file es una carpeta
     if os.path.isdir(args.file):
         print("es una carpeta")
+        convertir_carpeta(args.file, args.encoding)
         return
 
     #Si es un archivo .aif cargarlo
