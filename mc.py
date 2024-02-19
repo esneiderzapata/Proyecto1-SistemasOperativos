@@ -47,11 +47,13 @@ def main():
 
     #Comprobar si file es una carpeta
     if os.path.isdir(args.file):
-        print("es una carpeta")
-        convertir_carpeta(args.file, args.encoding)
+        if (args.encoding != None):
+            convertir_carpeta(args.file, args.encoding)
+        else:
+            print("No se sabe a que formato convertir la carpeta")
         return
 
-    #Si es un archivo .aif cargarlo
+    # Si es un archivo .aif cargarlo
     audio_cd = AudioSegment.from_file(args.file, format="aiff")
 
     # Convertir a MP3, AAC y FLAC
