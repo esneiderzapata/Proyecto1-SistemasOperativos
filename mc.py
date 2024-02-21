@@ -47,7 +47,6 @@ def procesar_formato(archivo, nombre_archivo, formato):
 def convertir_carpeta(carpeta, formato):
     start_time = time.time()
     archivo = [archivo for archivo in os.listdir(carpeta) if archivo.endswith("aif")]
-    print(archivo)
     with Pool() as pool:
         pool.starmap(procesar_formato, [(AudioSegment.from_file(os.path.join(carpeta, archivo), format="aiff"),
                                          archivo, formato) for archivo in archivo])
@@ -76,8 +75,6 @@ def main():
     audio_cd = AudioSegment.from_file(args.file, format="aiff")
 
     with Pool(processes=3) as pool:
-        print(audio_cd)
-
         mp3_result = pool.apply_async(convertir_a_mp3, (audio_cd,))
         ogg_result = pool.apply_async(convertir_a_ogg, (audio_cd,))
         flac_result = pool.apply_async(convertir_a_flac, (audio_cd,))
@@ -108,11 +105,11 @@ def main():
     opcion = input("Elija el formato que desea guardar en disco: ")
 
     if opcion == "1":
-        guardar_archivo("archivo_convertido.mp3", mp3_content)
+        guardar_archivo(f"{os.path.splitext(os.path.basename(args.file))[0]}.mp3", mp3_content)
     elif opcion == "2":
-        guardar_archivo("archivo_convertido.ogg", ogg_content)
+        guardar_archivo(f"{os.path.splitext(os.path.basename(args.file))[0]}.ogg", ogg_content)
     elif opcion == "3":
-        guardar_archivo("archivo_convertido.flac", flac_content)
+        guardar_archivo(f"{os.path.splitext(os.path.basename(args.file))[0]}.flac", flac_content)
     else:
         print("Opción no válida")
 
